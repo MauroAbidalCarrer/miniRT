@@ -6,16 +6,14 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:55:22 by maabidal          #+#    #+#             */
-/*   Updated: 2022/05/22 16:43:52 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/05/24 18:25:46 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SCENE_H
 # define SCENE_H
 
-# include "rendering.h"
-# include "header.h"
-
+# include "libft.h"
 # ifndef BOOL
 #  define BOOL uint8_t 
 #  define FALSE 0

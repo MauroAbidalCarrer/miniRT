@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:35:04 by maabidal          #+#    #+#             */
-/*   Updated: 2022/05/23 16:15:35 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/05/24 18:18:40 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,16 @@ static t_col	render_pixel(t_scene scene, t_ray cam_ray)
 	return (BLACK);
 }
 
-void	render_img(t_col *img, t_scene scene)
+void	render_img(t_scene scene, t_mlx mlx)
 {
 	int		x;
 	int		y;
 	t_ray	cam_ray;
+	void	*img_ptr;
+	t_col	*img;
 
+	img_ptr = mlx_new_image(mlx.ptr, WIN_WIDTH, WIN_HEIGHT);
+	img = (t_col *)mlx_get_data_addr(img_ptr, &x, &x, &x);
 	x = -1;
 	while (++x < WIN_WIDTH)
 	{
@@ -81,4 +85,6 @@ void	render_img(t_col *img, t_scene scene)
 			img[x + y * WIN_WIDTH] = render_pixel(scene, cam_ray);
 		}
 	}
+	mlx_put_image_to_window(mlx.ptr, mlx.win, img_ptr, 0, 0);
+	mlx_destroy_image(mlx.ptr, img_ptr);
 }

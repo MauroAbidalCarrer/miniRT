@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:45:01 by maabidal          #+#    #+#             */
-/*   Updated: 2022/05/23 20:18:35 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/05/24 18:18:13 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,24 +54,41 @@ t_scene	setup_scene()
 	return (scene);
 }
 
+# define KEY_ESC_M 53
+# define KEY_ESC_L 65307
+
+int	close_window(t_to_free *to_free)
+{
+	mlx_destroy_window(to_free->mlx.ptr, to_free->mlx.win);
+	free(to_free->mlx.ptr);
+//free objs
+	exit(0);
+	return (1);
+}
+
+int	key_hook(int keycode, t_to_free *to_free)
+{
+	if (keycode == KEY_ESC_M || keycode == KEY_ESC_L)
+		return (close_window(to_free));
+	return (0);
+}
+
 #include <stdio.h>
 
 int	main()
 {
-	void	*mlx_ptr;
-	void	*win_ptr;
-	void	*img_ptr;
-	int		dump;
-	t_col	*img;
+	t_mlx	mlx;
+	t_scene	scene;
+	t_to_free	to_free;
 
-	mlx_ptr = mlx_init();
-	win_ptr = mlx_new_window(mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "miniRT");
-	img_ptr = mlx_new_image(mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
-	img = (t_col *)mlx_get_data_addr(img_ptr, &dump, &dump, &dump);
-	render_img(img, setup_scene());
-	mlx_put_image_to_window(mlx_ptr, win_ptr, img_ptr, 0, 0);
-	mlx_loop(mlx_ptr);
-	mlx_destroy_image(mlx_ptr, img_ptr);
-	mlx_destroy_window(mlx_ptr, win_ptr);
-	free(mlx_ptr);
+	mlx.ptr = mlx_init();
+	mlx.win = mlx_new_window(mlx.ptr, WIN_WIDTH, WIN_HEIGHT, "miniRT");
+	scene = setup_scene();
+	to_free.mlx = mlx;
+	to_free.scene = scene;
+	render_img(scene, mlx);
+	mlx_hook(mlx.win, 17, 1L << 2, &close_window, &mlx);
+	mlx_key_hook(mlx.win, &key_hook, &mlx);
+	mlx_loop(mlx.ptr);
+	close_window(&to_free);
 }

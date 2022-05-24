@@ -15,10 +15,10 @@ INC =	-I ./srcs\
 		-I ./srcs/mlx/mlx_x11/\
 		-I ./srcs/mlx/mlx_opengl/\
 		-I ./srcs/parsing\
-		-I ./srcs/libft/includes\
 		-I ./srcs/math/\
 		-I ./srcs/mlx_colors/\
-		-I ./srcs/rendering/
+		-I ./srcs/rendering/\
+		-I ./srcs/libft/
 
 SRCS =	main.c\
 		math/polynomial.c\
