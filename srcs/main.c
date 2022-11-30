@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:45:01 by maabidal          #+#    #+#             */
-/*   Updated: 2022/05/24 18:18:13 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/11/30 01:03:02 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,15 @@ t_scene	setup_scene()
 # define KEY_ESC_M 53
 # define KEY_ESC_L 65307
 
-int	close_window(t_to_free *to_free)
+int	close_window(t_mlx *mlx)
 {
-	mlx_destroy_window(to_free->mlx.ptr, to_free->mlx.win);
-	free(to_free->mlx.ptr);
+	if (mlx != NULL)
+	{
+		if (mlx->win)
+			mlx_destroy_window(mlx->ptr, mlx->win);
+		if (mlx->ptr != NULL)
+			free(to_free->mlx.ptr);
+	}
 //free objs
 	exit(0);
 	return (1);
