@@ -6,12 +6,12 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:45:01 by maabidal          #+#    #+#             */
-/*   Updated: 2022/11/30 01:03:02 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/01 18:30:47 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
-
+/*
 t_scene	setup_scene()
 {
 	t_scene		scene;
@@ -53,47 +53,79 @@ t_scene	setup_scene()
 
 	return (scene);
 }
-
+*/
 # define KEY_ESC_M 53
 # define KEY_ESC_L 65307
-
-int	close_window(t_mlx *mlx)
+typedef struct s_to_free
 {
-	if (mlx != NULL)
+	t_mlx	*mlx;
+	t_list	*objs;
+}	t_to_free;
+
+
+static void free_obj(void *obj_interface)
+{
+	free(((t_obj_interface *)obj_interface)->obj);
+	free(obj_interface);
+}
+
+//should only be called after setup_scene
+static int close_window(t_to_free *to_free)
+{
+	int	status;
+	t_mlx	mlx;
+
+	mlx = *to_free->mlx;
+	status = 0;
+	ft_lstclear(&to_free->objs, &free_obj);
+	if (mlx.ptr)
+		free(mlx.ptr);
+	else
 	{
-		if (mlx->win)
-			mlx_destroy_window(mlx->ptr, mlx->win);
-		if (mlx->ptr != NULL)
-			free(to_free->mlx.ptr);
+		ft_putstr_fd("ERROR: could not create new window\n", 1);
+		status = 1;
 	}
-//free objs
-	exit(0);
-	return (1);
+	if (mlx.win)
+		mlx_destroy_window(mlx.ptr, mlx.win);
+	else if (status == 0)
+	{
+		ft_putstr_fd("ERROR: could not init mlx\n", 1);
+		status = 1;
+	}
+	exit(status);
+	return (0);
 }
 
 int	key_hook(int keycode, t_to_free *to_free)
 {
 	if (keycode == KEY_ESC_M || keycode == KEY_ESC_L)
-		return (close_window(to_free));
+		close_window(to_free);
 	return (0);
 }
 
-#include <stdio.h>
-
-int	main()
+int	main(int ac, char **av)
 {
-	t_mlx	mlx;
-	t_scene	scene;
+	t_mlx		mlx;
+	t_scene		scene;
 	t_to_free	to_free;
 
+	if (ac != 2)
+	{
+		ft_putstr_fd("ERROR: argument count should be one!\n", 1);
+		exit(1);
+	}
+	parse_scene(av[1], &scene);
+	to_free.objs = scene.objs;
+	to_free.mlx = &mlx;
 	mlx.ptr = mlx_init();
+	if (mlx.ptr == NULL)
+		close_window(&to_free);
 	mlx.win = mlx_new_window(mlx.ptr, WIN_WIDTH, WIN_HEIGHT, "miniRT");
-	scene = setup_scene();
-	to_free.mlx = mlx;
-	to_free.scene = scene;
+	if (mlx.win == NULL)
+		close_window(&to_free);
 	render_img(scene, mlx);
-	mlx_hook(mlx.win, 17, 1L << 2, &close_window, &mlx);
-	mlx_key_hook(mlx.win, &key_hook, &mlx);
+	mlx_hook(mlx.win, 17, 1L << 2, &close_window, &to_free);
+	mlx_key_hook(mlx.win, &key_hook, &to_free);
 	mlx_loop(mlx.ptr);
 	close_window(&to_free);
 }

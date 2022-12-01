@@ -18,7 +18,9 @@ INC =	-I ./srcs\
 		-I ./srcs/math/\
 		-I ./srcs/mlx_colors/\
 		-I ./srcs/rendering/\
-		-I ./srcs/libft/
+		-I ./srcs/libft/\
+		-I ./srcs/parsing/\
+		-I ./srcs/parsing/get_next_line/
 
 SRCS =	main.c\
 		math/polynomial.c\
@@ -28,9 +30,12 @@ SRCS =	main.c\
 		mlx_colors/color_color_ops.c\
 		mlx_colors/color_scalar_ops.c\
 		rendering/low_level.c\
-		rendering/high_level.c
+		rendering/high_level.c\
+		parsing/line_parsing.c\
+		parsing/get_next_line/get_next_line.c\
+		parsing/get_next_line/get_next_line_utils.c
 
-LIBFT = inc/libft/libft.a
+LIBFT = srcs/libft/libft.a
 
 CFLAGS = #-Wall -Werror -Wextra -g3 -MMD
 
@@ -53,8 +58,8 @@ libft :
 		@echo "\033[32m\t\t\t[OK]\033[0m"
 
 $(NAME) : mlx libft ${OBJS}
-		@echo -n  "Generating ${NAME}"
-		@${CC} ${CFLAGS} ${OBJS} ${MLX} ${LIB} -o ${NAME} 
+		#@echo -n  "Generating ${NAME}"
+		${CC} ${CFLAGS} ${OBJS} ${LIBFT} ${MLX} ${LIB} -o ${NAME} 
 		@echo "\033[32m\t\t[OK]\033[0m"
 
 bonus : $(NAME)

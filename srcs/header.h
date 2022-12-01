@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 18:37:06 by maabidal          #+#    #+#             */
-/*   Updated: 2022/05/24 18:20:48 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/01 18:31:22 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,11 @@ typedef struct s_mlx
 	void	*win;
 }	t_mlx;
 
+# include "parsing.h"
 # include <float.h>
 # include "libft.h"
 # include "mlx.h"
 # include "mlx_colors.h"
-//# include "minirt_parser.h"
-//# include "minirt_lexer.h"
 # include "ft_math.h"
 # include "scene.h"
 # include <stdint.h>
@@ -38,11 +37,5 @@ typedef struct s_mlx
 #  define FALSE 0
 #  define TRUE 1
 # endif
-
-typedef struct s_to_free
-{
-	t_mlx	mlx;
-	t_scene	scene;
-}	t_to_free;
 # include "rendering.h"
 #endif

@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:55:22 by maabidal          #+#    #+#             */
-/*   Updated: 2022/05/24 18:25:46 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/01 15:58:49 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,9 @@ typedef struct s_rayhit
 	double	t;
 }	t_rayhit;
 # endif 
+# define SPOT_MASK 1
+# define AMBIENT_MASK 2
+# define CAMERA_MASK 4
 
 typedef BOOL (* t_ray_caster)(void *, t_ray, t_rayhit *);
 
@@ -81,5 +84,6 @@ typedef struct s_scene
 	t_light		light;
 	t_camera	camera;
 	t_col 		ambiant_light;
+	char		singletons_mask;
 }	t_scene;
 #endif
