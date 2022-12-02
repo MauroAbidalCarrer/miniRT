@@ -6,12 +6,12 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 00:24:35 by maabidal          #+#    #+#             */
-/*   Updated: 2022/05/16 15:41:19 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/02 19:27:11 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_math.h"
-
+/*
 t_matrix	angles_to_rotation(t_vec angles)
 {
 	t_matrix	matrix;
@@ -29,14 +29,31 @@ t_matrix	angles_to_rotation(t_vec angles)
 	matrix.k = angles_to_vector(angles);
 	return (matrix);
 }
+*/
 
-/*
-//consiering that the up vector is (0, 1, 0)... up
+//assuming that the up vector is (0, 1, 0)... up
 t_matrix	dir_to_rotation(t_vec dir)
 {
-	t_matrix m;
+	t_matrix	m;
+	t_vec		dir_viewd_from_right;
+	t_vec		up_viewed_from_side;
+	double		horizontal_dist;
 
-(void)dir;
+	m.i = new_v(-dir.z, 0, dir.x);
+	horizontal_dist = mag(new_vec(dir.x, dir.y, 0));
+	dir_viewed_from_side = new_vec(horizontal_dist, dir.y, 0);
+	up_viwed_from_side = new_vec(-dir.y, horizontal_dist, 0);
+	m.j = new_v(dir.x, dir.z, -dir.y);
+	m.k = dir;
 	return (m);
 }
-*/
+
+t_vec	mult_vec_by_matrix(t_vec v, t_matrix mat)
+{
+	t_vec	new;
+
+	new = sum(new_v(0, 0, 0), mul_d(mat.i, v.x));
+	new = sum(new, mul_d(mat.j, v.y));
+	new = sum(new, mul_d(mat.k, v.z));
+	return (new);
+}

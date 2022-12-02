@@ -27,6 +27,7 @@ SRCS =	main.c\
 		math/vectors.c\
 		math/vectors2.c\
 		math/vectors3.c\
+		math/matrices.c\
 		mlx_colors/color_color_ops.c\
 		mlx_colors/color_scalar_ops.c\
 		rendering/low_level.c\

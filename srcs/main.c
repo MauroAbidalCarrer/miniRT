@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:45:01 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/02 16:11:32 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/02 19:02:47 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,27 +79,23 @@ static void free_obj(void *obj_interface)
 //should only be called after setup_scene
 static int close_window(t_to_free *to_free)
 {
-	int	status;
 	t_mlx	mlx;
 
 	mlx = *to_free->mlx;
-	status = 0;
 	ft_lstclear(&to_free->objs, &free_obj);
-	if (mlx.ptr)
-		free(mlx.ptr);
-	else
+	if (!mlx.ptr)
 	{
 		ft_putstr_fd("ERROR: could not create new window\n", 1);
-		status = 1;
+		exit(1);
 	}
-	if (mlx.win)
-		mlx_destroy_window(mlx.ptr, mlx.win);
-	else if (status == 0)
+	if (!mlx.win)
 	{
 		ft_putstr_fd("ERROR: could not init mlx\n", 1);
-		status = 1;
+		exit(1);
 	}
-	exit(status);
+	mlx_destroy_window(mlx.ptr, mlx.win);
+	free(mlx.ptr);
+	exit(0);
 	return (0);
 }
 
@@ -124,6 +120,10 @@ int	main(int ac, char **av)
 	}
 	parse_scene(av[1], &scene);
 //	scene = setup_scene();
+	scene.camera.rotation = dir_to_rotation(scene.camera.dir);
+print_vec3(scene.camera.rotation.i);
+print_vec3(scene.camera.rotation.j);
+print_vec3(scene.camera.rotation.k);
 	to_free.objs = scene.objs;
 	to_free.mlx = &mlx;
 	mlx.ptr = mlx_init();

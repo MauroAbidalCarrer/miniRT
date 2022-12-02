@@ -6,13 +6,13 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 16:58:17 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/02 17:34:22 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/02 17:56:15 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 #include "../scene.h"
-# include "../math/ft_math.h"
+#include "../math/ft_math.h"
 #include "../libft/libft.h"
 #include <string.h>
 #include <stdio.h>
@@ -232,8 +232,6 @@ int	parse_camera(char *line, t_scene *scene)
 	dsts[2] = &cam_buf.fov;
 	parsers[3] = NULL;
 	status = parse_object(line, parsers, dsts, "C");
-	if (status == 0)
-		printf("fov qfter parse_object = %f\n", cam_buf.fov);
 	if (status == 2)
 		return (1);
 	if (status == 1 || !in_range(cam_buf.fov, 0, 180))
@@ -442,5 +440,3 @@ void	parse_scene(char *filename, t_scene *scene)
 		 (scene->singletons_mask & CAMERA_MASK) == 0)
 		ft_exit(scene->objs, NO_SING_MSG, NULL);
 }
-
-//files: field_parsing.c, object_parsing.c, object_parsing2.c

@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:32:37 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/02 16:06:31 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/02 19:01:28 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -66,6 +66,7 @@ t_ray	mk_camray(t_camera cam, int x, int y)
 	ray.origin.z = 1.0;
 //printf("origin after mult= ");print_vec3(ray.origin);
 	ray.dir = normalized(ray.origin);
+	ray.dir = mult_vec_by_matrix(ray.dir, cam.rotation);
 	return (ray);
 }
 

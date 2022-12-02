@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/12 23:51:05 by maabidal          #+#    #+#             */
-/*   Updated: 2022/05/22 16:53:46 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/02 19:00:56 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ typedef struct s_matrix
 }	t_matrix;
 
 //t_matrix	angles_to_roatation(t_vec angles);
-//t_matrix	dir_to_rotation(t_vec angles);
+t_matrix	dir_to_rotation(t_vec angles);
+t_vec	mult_vec_by_matrix(t_vec v, t_matrix mat);
 
 //algebra
 //quadratic
