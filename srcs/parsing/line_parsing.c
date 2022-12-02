@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 16:58:17 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/01 18:49:07 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/02 17:34:22 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,35 +16,66 @@
 #include "../libft/libft.h"
 #include <string.h>
 #include <stdio.h>
-/*
+
+int in_range(double val, double min, double max)
+{
+	return (val >= min && val <= max);
+}
+
+static int	parse_decimal_in_double(char **str, double *dst)
+{
+	int	parsed_something;
+	double	mult;
+
+	mult = 0.1;
+	parsed_something = 0;
+	while (ft_isdigit(**str))
+	{
+		parsed_something = 1;
+		*dst += mult * (double)(**str - '0');
+		mult *= 0.1;
+		(*str)++;
+	}
+	return (parsed_something == 0);
+}
+
+static int	parse_int_in_double(char **str, double *dst)
+{
+	int	parsed_something;
+
+	parsed_something = 0;
+	while (ft_isdigit(**str))
+	{
+		parsed_something = 1;
+		*dst *= 10;
+		*dst += (double)(**str - '0');
+		(*str)++;
+	}
+	return (parsed_something == 0);
+}
+
 //return NULL if there is no number
 //return NULL if there is no number before the  '.'
 //return NULL if there is no number after the '.'
 char	*parse_double(char *str, void *dst)
 {
 	double sign;
-	double	multiplier;
 
+	*(double *)dst = 0;
 	sign = 1 - 2 * (*str == '-');
 	str += (*str == '-' || *str == '+');
-	multiplier = 1;
-	while (ft_is_digit(*str))
-	{
-		*(double *)dst += multiplier * (double)(*str - '0');
-		multiplier *= 10;
-		str++;
-	}
+	if (parse_int_in_double(&str, (double *)dst))
+		return (NULL);
 	if (*str != '.')
-		return ((multiplier != 1) * str);
-	*str++;
-	multiplier = 0.1;
-	while (ft_is_digit(*str))
 	{
-		*(double *)dst += multiplier * (double)(*str - '0');
-		multiplier /= 10;
-		str++;
+		*(double *)dst *= sign;
+		return (str);
 	}
-	return ((multiplier != 0.1) * str);
+	str++;
+	if (parse_decimal_in_double(&str, (double *)dst))
+		return (NULL);
+	*(double *)dst *= sign;
+	return (str);
 }
 
 char	*parse_vector(char *str, void *dst)
@@ -52,16 +83,16 @@ char	*parse_vector(char *str, void *dst)
 	int	i;
 	double	*dsts[3];
 
-	dsts[0] == &(t_ve *)dst->x;
-	dsts[1] == &(t_ve *)dst->y;
-	dsts[2] == &(t_ve *)dst->z;
+	dsts[0] = &((t_vec *)dst)->x;
+	dsts[1] = &((t_vec *)dst)->y;
+	dsts[2] = &((t_vec *)dst)->z;
 	i = -1;
 	while (++i < 3)
 	{
 		str = parse_double(str, dsts[i]);
-		if (str++ == NULL)
+		if (str == NULL)
 			return (NULL);
-		if (*(str++) != ',')
+		if (i < 2 && *(str++) != ',')
 			return (NULL);
 	}
 	return (str);
@@ -80,23 +111,23 @@ int	vector_in_range(t_vec vec, double min, double max)
 char 	*parse_color(char *str, void *dst)
 {
 	int	channel;
-	t_col	colors[3];
+	int	bit_shifts[3];	
 	int	i;
 
-	*(t_col *)col = 0;
-	colors[0] = RED;
-	colors[1] = GREEN;
-	colors[2] = BLUE;
+	*(t_col *)dst = 0;
+	bit_shifts[0] = 16;
+	bit_shifts[1] = 8;
+	bit_shifts[2] = 0;
 	i = -1;
 	while (++i < 3)
 	{
 		channel = ft_atoi(str);
-		str += (*str == '-' || *str == '+')
 		while (ft_isdigit(*str))
 			str++;
-		if (*(str++) != ',' || channel > 255 || channel < 0)
+		if ((i< 2 && *(str++) != ',')|| channel > 255 || channel < 0)
 			return (NULL);
-		*(t_col *)col = add_colors(*(t_col *)col, mult_colors(colos[i], (double)channel));
+		*(t_col *)dst |= channel << bit_shifts[i];
+//printf("channel = %8X, dst = %8X\n", channel << bit_shifts[i], *(t_col *)dst);
 	}
 	return (str);
 }
@@ -122,7 +153,7 @@ int	starts_by(char *str, char *str2)
 //if it returns one, return one
 
 //once every field_parser has be ran check that the last character == '\n' or wero
-int	parse_object(char *line, t_field_parser *parsers, void *dsts, char *occ)
+int	parse_object(char *line, t_field_parser *parsers, void **dsts, char *occ)
 {
 	if (!starts_by(line, occ))
 		return (2);
@@ -135,144 +166,8 @@ int	parse_object(char *line, t_field_parser *parsers, void *dsts, char *occ)
 		parsers++;
 		dsts++;
 	}
-	return (*line != '\n' || *line != 0);
+	return (*line != '\n' && *line != 0);
 }
-
-//checks if intensity is in range [0, 1]
-//checks if that there were no spot_light serialized before
-int	parse_spot_light(char *line, t_scene *scene)
-{
-	t_col			dump;
-	t_field_parser	parsers[4];
-	void			dsts[3];
-	int				status;
-
-	parsers[0] = &parse_vector;
-	dsts[0] = &scene->light.pos;
-	parsers[1] = &parse_double;
-	dsts[1] = &scene->light.intensity;
-	parsers[2] = &parse_color;
-	dsts[2] = &dump;
-	parsers[3] = NULL;
-	status = parse_object(line, parsers, dsts, "L");
-	if (status == 2)
-		return (1);
-	if (status == 1 || !in_range(scene->light.intensity, 0, 1))
-		ft_exit(scene->objs, NULL, BAD_FORMAT_MSG, line);
-	if (scene->singleton_mask & SPOT_MASK)
-		ft_exit(scene->objs, NULL, DUPLICATE_SING_MSG, line);
-	scene->singleton_mask |= SPOT_MASK;
-	return (0);
-}
-
-void	add_new_obj(char *line, t_scene *scene, void *cpy, t_ray_caster *caster)
-{
-	t_obj_interface	*interface;
-	t_list			*new_node;
-
-	interface = malloc(sizeof(t_obj_interface));
-	new_node = malloc(sizeof(t_list));
-	if (new_node == NULL || interface == NULL || cpy == NULL)
-	{
-		free(interfae);
-		free(cpy);
-		ft_exit(scene->objs, NULL, ALLOCATION_ERROR_MSG, line);
-	}
-	interface->obj = cpy;
-	interface->ray_caster = caster;
-	new_node->content = interface;
-	ft_lstadd_front(&scene->objs, new_node);
-}
-
-//check dir in range [-1, 1]
-//divides radius by two to get actual radius(and not diameter)
-int	parse_cylinder(char *line, t_scene *scene)
-{
-	t_cylinder		cyl_buff;
-	t_field_parser	parsers[6];
-	void			dsts[5];
-	int				status;
-	void			*cpy;
-
-	parsers[0] = &parse_vector;
-	dsts[0] = &cyl_buff.pos;
-	parsers[1] = &parse_vector;
-	dsts[1] = &cyl_buff.dir;
-	parsers[2] = &parse_double;
-	dsts[2] = &cyl_buff.radius;
-	parsers[3] = &parse_double;
-	dsts[3] = &cyl_buff.height;
-	parsers[4] = &parse_color;
-	dsts[4] = &cyl_buff.col;
-	parsers[5] = NULL;
-	satus = parse_line(line, parsers, dsts, "cy");
-	if (status == 2)
-		return (1);
-	if (status == 1 || !vector_in_range(cyl.dir, -1, 1))
-		ft_exit(scene->objs, NULL, BAD_FORMAT_MSG, line);
-	cyl.radius /= 2.0;
-	cpy = ft_memcpy(malloc(sizeof(t_cylinder)), &cyl_buff, sizeof(t_cylinder));
-	add_new_obj(line, scene->objs, &t_cylinder, cpy);
-}
-
-//object parsers should return one if the line is empty
-//object parsers should call ft_exit if there is a format issue
-//line has to be either just \n or describe an object
-void parse_line(char *line, t_scene *scene)
-{
-	if (*line != '\n' &&
-		parse_spot_light(line, scene) &&
-		parse_ambient_light(line, scene) &&
-		parse_camera(line, scene) &&
-		parse_cylinder(line, scene) &&
-		parse_sphere(line, scene) &&
-		parse_plane(line, scene))
-		ft_exit(scene-objs, NULL, BAD_FORMAT_MSG, line);
-}
-
-*/
-t_scene	setup_scene()
-{
-	t_scene		scene;
-
-	scene.light.pos = new_v(-11, 8, 19);
-	scene.light.intensity = 100;
-	scene.camera.dir = new_v(0, 0, 1);
-	scene.camera.pos = new_v(0, 0, 0);
-	scene.camera.fov = 70.0;
-	scene.ambiant_light = 0x00900A0F;
-
-	scene.objs = malloc(sizeof(t_list));
-	scene.objs->content = malloc(sizeof(t_obj_interface));
-	((t_obj_interface *)scene.objs->content)->ray_caster = &sphere_raycast;
-	((t_obj_interface *)scene.objs->content)->obj = malloc(sizeof(t_sphere));
-	((t_sphere *)((t_obj_interface *)scene.objs->content)->obj)->center = new_v(5, 0, 17);
-	((t_sphere *)((t_obj_interface *)scene.objs->content)->obj)->radius = 5;
-	((t_sphere *)((t_obj_interface *)scene.objs->content)->obj)->albedo = 0x00601A5F;
-	scene.objs->next = NULL;
-
-	scene.objs->next = malloc(sizeof(t_list));
-	scene.objs->next->content = malloc(sizeof(t_obj_interface));
-	((t_obj_interface *)scene.objs->next->content)->ray_caster = &plane_raycast;
-	((t_obj_interface *)scene.objs->next->content)->obj = malloc(sizeof(t_plane));
-	((t_plane *)((t_obj_interface *)scene.objs->next->content)->obj)->pos = new_v(2, -5, 0);
-	((t_plane *)((t_obj_interface *)scene.objs->next->content)->obj)->normal = new_v(1, 0, 0);
-	((t_plane *)((t_obj_interface *)scene.objs->next->content)->obj)->albedo = 0x00601A5F;
-
-	scene.objs->next->next = malloc(sizeof(t_list));
-	scene.objs->next->next->content = malloc(sizeof(t_obj_interface));
-	((t_obj_interface *)scene.objs->next->next->content)->ray_caster = &cylinder_raycast;
-	((t_obj_interface *)scene.objs->next->next->content)->obj = malloc(sizeof(t_cylinder));
-	((t_cylinder *)((t_obj_interface *)scene.objs->next->next->content)->obj)->pos = new_v(-2, -4, 15);
-	((t_cylinder *)((t_obj_interface *)scene.objs->next->next->content)->obj)->dir = new_v(0, 1, 0);
-	((t_cylinder *)((t_obj_interface *)scene.objs->next->next->content)->obj)->height = 3;
-	((t_cylinder *)((t_obj_interface *)scene.objs->next->next->content)->obj)->radius = 2;
-	((t_cylinder *)((t_obj_interface *)scene.objs->next->next->content)->obj)->albedo = 0x00601A5F;
-	scene.objs->next->next->next = NULL;
-
-	return (scene);
-}
-
 
 static void free_obj(void *obj_interface)
 {
@@ -287,6 +182,216 @@ static void ft_exit(t_list *objs, char *error_msg, char *line)
 	ft_lstclear(&objs, &free_obj);
 	free(line);
 	exit(error_msg != NULL);
+}
+
+
+//checks if intensity is in range [0, 1]
+//checks if that there were no spot_light serialized before
+int	parse_spot_light(char *line, t_scene *scene)
+{
+	t_col			dump;
+	t_field_parser	parsers[4];
+	void			*dsts[3];
+	int				status;
+
+	parsers[0] = &parse_vector;
+	dsts[0] = &scene->light.pos;
+	parsers[1] = &parse_double;
+	dsts[1] = &scene->light.intensity;
+	parsers[2] = &parse_color;
+	dsts[2] = &dump;
+	parsers[3] = NULL;
+	status = parse_object(line, parsers, dsts, "L");
+//printf("spot_light, line \"%s\", status %d\n", line, status);
+	if (status == 2)
+		return (1);
+	if (status == 1 /*|| !in_range(scene->light.intensity, 0, 1)*/)
+		ft_exit(scene->objs, BAD_FORMAT_MSG, line);
+	if (scene->singletons_mask & SPOT_MASK)
+		ft_exit(scene->objs, "ERROR: duplicate spot light!\n", line);
+	scene->singletons_mask |= SPOT_MASK;
+//printf("spot light, pos = ");print_vec3(scene->light.pos);printf(", intensity = %f\n", scene->light.intensity);
+	return (0);
+}
+
+//check that fov is in 0,180 range,
+//checkthat there is not another camera
+//normalize direcition
+int	parse_camera(char *line, t_scene *scene)
+{
+	t_camera		cam_buf;
+	t_field_parser	parsers[4];
+	void			*dsts[3];
+	int				status;
+
+	parsers[0] = &parse_vector;
+	dsts[0] = &cam_buf.pos;
+	parsers[1] = &parse_vector;
+	dsts[1] = &cam_buf.dir;
+	parsers[2] = &parse_double;
+	dsts[2] = &cam_buf.fov;
+	parsers[3] = NULL;
+	status = parse_object(line, parsers, dsts, "C");
+	if (status == 0)
+		printf("fov qfter parse_object = %f\n", cam_buf.fov);
+	if (status == 2)
+		return (1);
+	if (status == 1 || !in_range(cam_buf.fov, 0, 180))
+		ft_exit(scene->objs, BAD_FORMAT_MSG, line);
+	if (scene->singletons_mask & CAMERA_MASK)
+		ft_exit(scene->objs, "ERROR: duplicate camera!\n", line);
+	cam_buf.dir = normalized(cam_buf.dir);
+	scene->camera = cam_buf;
+	scene->singletons_mask |= CAMERA_MASK;
+//printf("camera, pos = ");print_vec3(cam_buf.pos);printf(", dir = ");print_vec3(cam_buf.dir);printf(", fov %f\n", cam_buf.fov);
+	return (0);
+}
+
+//check for ambient mask
+//check ntensity range
+int	parse_ambient_light(char *line, t_scene *scene)
+{
+	t_col			col;
+	double			intensity;
+	t_field_parser	parsers[3];
+	void			*dsts[2];
+	int				status;
+
+	parsers[0] = &parse_double;
+	dsts[0] = &intensity;
+	dsts[1] = &col;
+	parsers[1] = &parse_color;
+	parsers[2] = NULL;
+	status = parse_object(line, parsers, dsts, "A");
+	if(status == 2)
+		return (1);
+	if (status == 1 /*|| !in_range(intensity, 0, 1)*/)
+		ft_exit(scene->objs, BAD_FORMAT_MSG, line);
+	if (scene->singletons_mask & AMBIENT_MASK)
+		ft_exit(scene->objs, "ERROR: duplicate ambiant light!\n", line);
+	scene->ambiant_light = mult_color_scalar(col, intensity);
+	scene->singletons_mask |= AMBIENT_MASK;
+//printf("ambient light, col = %8X\n", scene->ambiant_light);
+	return (0);
+}
+
+void	add_new_obj(char *line, t_scene *scene, void *cpy, t_ray_caster caster)
+{
+	t_obj_interface	*interface;
+	t_list			*new_node;
+
+	interface = malloc(sizeof(t_obj_interface));
+	new_node = malloc(sizeof(t_list));
+	if (new_node == NULL || interface == NULL || cpy == NULL)
+	{
+		free(interface);
+		free(cpy);
+		ft_exit(scene->objs, ALLOCATION_ERROR_MSG, line);
+	}
+	interface->obj = cpy;
+	interface->ray_caster = caster;
+	new_node->content = interface;
+	new_node->next = NULL;
+	ft_lstadd_front(&scene->objs, new_node);
+}
+
+//check dir in range [-1, 1]
+//divides radius by two to get actual radius(and not diameter)
+int	parse_cylinder(char *line, t_scene *scene)
+{
+	t_cylinder		cyl_buff;
+	t_field_parser	parsers[6];
+	void			*dsts[5];
+	int				status;
+	t_cylinder		*cpy;
+
+	parsers[0] = &parse_vector;
+	dsts[0] = &cyl_buff.pos;
+	parsers[1] = &parse_vector;
+	dsts[1] = &cyl_buff.dir;
+	parsers[2] = &parse_double;
+	dsts[2] = &cyl_buff.radius;
+	parsers[3] = &parse_double;
+	dsts[3] = &cyl_buff.height;
+	parsers[4] = &parse_color;
+	dsts[4] = &cyl_buff.albedo;
+	parsers[5] = NULL;
+	status = parse_object(line, parsers, dsts, "cy");
+	if (status == 2)
+		return (1);
+	if (status == 1 || !vector_in_range(cyl_buff.dir, -1, 1))
+		ft_exit(scene->objs, BAD_FORMAT_MSG, line);
+	cyl_buff.radius /= 2.0;
+	cyl_buff.dir = normalized(cyl_buff.dir);
+//printf("cylinder pos = ");print_vec3(cyl_buff.pos);printf(", dir = ");print_vec3(cyl_buff.dir);printf(", radius = %f, height = %f, albedo = %8X\n", cyl_buff.radius, cyl_buff.height, cyl_buff.albedo);
+	cpy = ft_memcpy(malloc(sizeof(t_cylinder)), &cyl_buff, sizeof(t_cylinder));
+//printf("cylinder pos = ");print_vec3(cpy->pos);printf(", dir = ");print_vec3(cpy->dir);printf(", radius = %f, height = %f, albedo = %8X\n", cpy->radius, cpy->height, cpy->albedo);
+	return (add_new_obj(line, scene, cpy, cylinder_raycast), 0);
+}
+
+int	parse_sphere(char *line, t_scene *scene)
+{
+	t_sphere		sphere_buff;
+	t_field_parser	parsers[4];
+	void			*dsts[3];
+	int				status;
+	void			*cpy;
+
+	parsers[0] = &parse_vector;
+	dsts[0] = &sphere_buff.center;
+	parsers[1] = &parse_double;
+	dsts[1] = &sphere_buff.radius;
+	parsers[2] = &parse_color;
+	dsts[2] = &sphere_buff.albedo;
+	parsers[3] = NULL;
+	status = parse_object(line, parsers, dsts, "sp");
+	if (status == 2)
+		return (1);
+	if (status == 1)
+		ft_exit(scene->objs, BAD_FORMAT_MSG, line);
+	sphere_buff.radius /= 2.0;
+	cpy = ft_memcpy(malloc(sizeof(t_sphere)), &sphere_buff, sizeof(t_sphere));
+	return (add_new_obj(line, scene, cpy, sphere_raycast), 0);
+}
+
+int parse_plane(char *line, t_scene *scene)
+{
+	t_plane			plane_buff;
+	t_field_parser	parsers[4];
+	void			*dsts[3];
+	int				status;
+	void			*cpy;
+
+	parsers[0] = &parse_vector;
+	dsts[0] = &plane_buff.pos;
+	parsers[1] = &parse_vector;
+	dsts[1] = &plane_buff.normal;
+	parsers[2] = &parse_color;
+	dsts[2] = &plane_buff.albedo;
+	parsers[3] = NULL;
+	status = parse_object(line, parsers, dsts, "pl");
+	if (status == 2)
+		return (1);
+	if (status == 1 || !vector_in_range(plane_buff.normal, -1, 1))
+		ft_exit(scene->objs, BAD_FORMAT_MSG, line);
+	plane_buff.normal = normalized(plane_buff.normal);
+	cpy = ft_memcpy(malloc(sizeof(t_plane)), &plane_buff, sizeof(t_plane));
+	return (add_new_obj(line, scene, cpy, plane_raycast), 0);
+}
+
+//object parsers should return one if the line is empty
+//object parsers should call ft_exit if there is a format issue
+//line has to be either just \n or describe an object
+void parse_line(char *line, t_scene *scene)
+{
+	if (*line != '\n' &&
+		parse_spot_light(line, scene) &&
+		parse_ambient_light(line, scene) &&
+		parse_camera(line, scene) &&
+		parse_cylinder(line, scene) &&
+		parse_sphere(line, scene) &&
+		parse_plane(line, scene))
+		ft_exit(scene->objs, BAD_FORMAT_MSG, line);
 }
 
 //makes sure the file ends in .rt
@@ -321,16 +426,17 @@ void	parse_scene(char *filename, t_scene *scene)
 	fd = get_fd(filename);
 	scene->objs = NULL;
 	scene->singletons_mask = 0;
-	printf("fd = %d\n", fd);
 	line = get_next_line(fd);
 	while (line)
 	{
-		//parse_line(line, scene);
-		printf("%s", line);
+		parse_line(line, scene);
 		free(line);	
 		line = get_next_line(fd);
 	}
-	*scene = setup_scene();
+
+//printf("spot light, pos = ");print_vec3(scene->light.pos);printf(", intensity = %f\n", scene->light.intensity);
+//printf("\nambient = %8X\n", scene->ambiant_light);
+	//*scene = setup_scene();
 	if ((scene->singletons_mask & SPOT_MASK) == 0 ||
 		 (scene->singletons_mask & AMBIENT_MASK) == 0 ||
 		 (scene->singletons_mask & CAMERA_MASK) == 0)

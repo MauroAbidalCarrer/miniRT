@@ -6,12 +6,11 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:45:01 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/01 18:30:47 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/02 16:11:32 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
-/*
 t_scene	setup_scene()
 {
 	t_scene		scene;
@@ -21,16 +20,16 @@ t_scene	setup_scene()
 	scene.camera.dir = new_v(0, 0, 1);
 	scene.camera.pos = new_v(0, 0, 0);
 	scene.camera.fov = 70.0;
-	scene.ambiant_light = 0x00900A0F;
-
+	scene.ambiant_light = 0x00FFFFFF;
+/*
 	scene.objs = malloc(sizeof(t_list));
 	scene.objs->content = malloc(sizeof(t_obj_interface));
 	((t_obj_interface *)scene.objs->content)->ray_caster = &sphere_raycast;
 	((t_obj_interface *)scene.objs->content)->obj = malloc(sizeof(t_sphere));
-	((t_sphere *)((t_obj_interface *)scene.objs->content)->obj)->center = new_v(5, 0, 17);
+	((t_sphere *)((t_obj_interface *)scene.objs->content)->obj)->center = new_v(5, 0, 117);
 	((t_sphere *)((t_obj_interface *)scene.objs->content)->obj)->radius = 5;
-	((t_sphere *)((t_obj_interface *)scene.objs->content)->obj)->albedo = 0x00601A5F;
-	scene.objs->next = NULL;
+	((t_sphere *)((t_obj_interface *)scene.objs->content)->obj)->albedo = 0x0000FF00;
+	//scene.objs->next = NULL;
 
 	scene.objs->next = malloc(sizeof(t_list));
 	scene.objs->next->content = malloc(sizeof(t_obj_interface));
@@ -38,7 +37,7 @@ t_scene	setup_scene()
 	((t_obj_interface *)scene.objs->next->content)->obj = malloc(sizeof(t_plane));
 	((t_plane *)((t_obj_interface *)scene.objs->next->content)->obj)->pos = new_v(2, -5, 0);
 	((t_plane *)((t_obj_interface *)scene.objs->next->content)->obj)->normal = new_v(1, 0, 0);
-	((t_plane *)((t_obj_interface *)scene.objs->next->content)->obj)->albedo = 0x00601A5F;
+	((t_plane *)((t_obj_interface *)scene.objs->next->content)->obj)->albedo = 0x00FF00FF;
 
 	scene.objs->next->next = malloc(sizeof(t_list));
 	scene.objs->next->next->content = malloc(sizeof(t_obj_interface));
@@ -48,12 +47,21 @@ t_scene	setup_scene()
 	((t_cylinder *)((t_obj_interface *)scene.objs->next->next->content)->obj)->dir = new_v(0, 1, 0);
 	((t_cylinder *)((t_obj_interface *)scene.objs->next->next->content)->obj)->height = 3;
 	((t_cylinder *)((t_obj_interface *)scene.objs->next->next->content)->obj)->radius = 2;
-	((t_cylinder *)((t_obj_interface *)scene.objs->next->next->content)->obj)->albedo = 0x00601A5F;
+	((t_cylinder *)((t_obj_interface *)scene.objs->next->next->content)->obj)->albedo = 0x00001010;
 	scene.objs->next->next->next = NULL;
-
+*/
+	scene.objs = malloc(sizeof(t_list));
+	scene.objs->content = malloc(sizeof(t_obj_interface));
+	((t_obj_interface *)scene.objs->content)->ray_caster = &cylinder_raycast;
+	((t_obj_interface *)scene.objs->content)->obj = malloc(sizeof(t_cylinder));
+	((t_cylinder *)((t_obj_interface *)scene.objs->content)->obj)->pos = new_v(-2, -4, 15);
+	((t_cylinder *)((t_obj_interface *)scene.objs->content)->obj)->dir = new_v(0, 1, 0);
+	((t_cylinder *)((t_obj_interface *)scene.objs->content)->obj)->height = 3;
+	((t_cylinder *)((t_obj_interface *)scene.objs->content)->obj)->radius = 2;
+	((t_cylinder *)((t_obj_interface *)scene.objs->content)->obj)->albedo = 0x00601A5F;
+	scene.objs->next = NULL;
 	return (scene);
 }
-*/
 # define KEY_ESC_M 53
 # define KEY_ESC_L 65307
 typedef struct s_to_free
@@ -61,7 +69,6 @@ typedef struct s_to_free
 	t_mlx	*mlx;
 	t_list	*objs;
 }	t_to_free;
-
 
 static void free_obj(void *obj_interface)
 {
@@ -103,6 +110,7 @@ int	key_hook(int keycode, t_to_free *to_free)
 	return (0);
 }
 
+#include<stdio.h>
 int	main(int ac, char **av)
 {
 	t_mlx		mlx;
@@ -115,6 +123,7 @@ int	main(int ac, char **av)
 		exit(1);
 	}
 	parse_scene(av[1], &scene);
+//	scene = setup_scene();
 	to_free.objs = scene.objs;
 	to_free.mlx = &mlx;
 	mlx.ptr = mlx_init();

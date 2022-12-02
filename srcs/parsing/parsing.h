@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 17:01:04 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/01 18:49:57 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/01 19:13:12 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 //otherwise, returns the rest of the line after the field
-//								  line,   dst,    scene objes to free
-typedef char	*(* field_parser)(char *, void *, t_list *);
+//								  line,   dst
+typedef char	*(* t_field_parser)(char *, void *);
 
 //parses a field(color, vector3 or float)
 //calls ft_exit if there is a format error
@@ -36,6 +36,5 @@ typedef char	*(* field_parser)(char *, void *, t_list *);
 char	*parse_vector(char *str, void *dst);
 char	*parse_double(char *str, void *dst);
 char 	*parse_color(char *str, void *col);
-int	parse_line(char *line, char *occ, field_parser*, void *dsts, int nb_fields);
 void	parse_scene(char *filename, t_scene *scene);
 #endif

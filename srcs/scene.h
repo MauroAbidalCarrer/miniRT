@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:55:22 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/01 15:58:49 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/02 01:28:54 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef struct e_camera
 	t_vec		pos;
 	t_vec		dir;
 	t_matrix	rotation;
-	uint8_t		fov;
+	double		fov;
 }				t_camera;
 
 typedef struct e_light

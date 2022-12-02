@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:35:04 by maabidal          #+#    #+#             */
-/*   Updated: 2022/05/24 18:18:40 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/02 16:05:38 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ static t_col	render_pixel(t_scene scene, t_ray cam_ray)
 	double		lighting;
 	t_col		col;
 
+//printf("render_pixel, pos = ");print_vec3(cam_ray.origin);printf("render_pixel, dir = ");print_vec3(cam_ray.dir);
 	hit.t = DBL_MAX;
 	if (cast_ray(cam_ray, scene.objs, &hit))
 	{
