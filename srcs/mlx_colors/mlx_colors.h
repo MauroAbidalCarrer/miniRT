@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 14:14:59 by maabidal          #+#    #+#             */
-/*   Updated: 2022/05/19 19:02:02 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/03 21:19:53 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ typedef uint32_t	t_col;
 //one channel is actually 8 bits long,
 //but 16 isrequired for operation that exceed uint8 max
 typedef uint16_t	t_channel;
-
-typedef t_col	(*t_channel_op)(t_channel, t_channel);
 
 t_col	mult_colors(t_col a, t_col b);
 t_col	add_colors(t_col a, t_col b);

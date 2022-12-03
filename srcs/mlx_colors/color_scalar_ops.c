@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 16:21:25 by maabidal          #+#    #+#             */
-/*   Updated: 2022/05/17 15:14:05 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/03 21:18:56 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,4 @@ t_col	mult_color_scalar(t_col col, double scalar)
 	mult_channels(BLUE_INDEX, col, oui, add);
 	mult_channels(GREEN_INDEX, col, oui, add);
 	return (tmp);
-
 }

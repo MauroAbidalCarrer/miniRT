@@ -6,25 +6,23 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:52:11 by maabidal          #+#    #+#             */
-/*   Updated: 2022/05/24 18:19:04 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/03 21:18:12 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RENDERING_H
 # define RENDERING_H
-
 # include "ft_math.h"
 # include "mlx_colors.h"
 # include "scene.h"
 # include "header.h"
-
 # ifndef BOOL
-#  define BOOL uint8_t 
 #  define FALSE 0
 #  define TRUE 1
 # endif
 # ifndef RAYHIT
 #  define RAYHIT
+
 typedef struct s_rayhit
 {
 	t_col	albedo;
@@ -34,11 +32,10 @@ typedef struct s_rayhit
 }	t_rayhit;
 # endif 
 
-extern BOOL	test;
-
 t_ray	mk_camray(t_camera cam, int x, int y);
-BOOL	sphere_raycast(void *sphere, t_ray ray, t_rayhit *hit);
-BOOL	plane_raycast(void *plane_ptr, t_ray ray, t_rayhit *hit);
-BOOL	cylinder_raycast(void *cylinder_ptr, t_ray ray, t_rayhit *hit);
+int		sphere_raycast(void *sphere, t_ray ray, t_rayhit *hit);
+int		plane_raycast(void *plane_ptr, t_ray ray, t_rayhit *hit);
+int		cylinder_raycast(void *cylinder_ptr, t_ray ray, t_rayhit *hit);
 void	render_img(t_scene scene, t_mlx mlx);
+int		are_hits(double *inters, t_rayhit *hit);
 #endif

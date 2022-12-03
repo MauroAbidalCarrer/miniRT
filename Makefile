@@ -31,8 +31,14 @@ SRCS =	main.c\
 		mlx_colors/color_color_ops.c\
 		mlx_colors/color_scalar_ops.c\
 		rendering/low_level.c\
+		rendering/cylinder_raycast.c\
 		rendering/high_level.c\
-		parsing/line_parsing.c\
+		parsing/common_objects_parsing.c\
+		parsing/double.c\
+		parsing/high_level_parsing.c\
+		parsing/parse_object_and_exit.c\
+		parsing/parse_vector_and_color.c\
+		parsing/singletons_parsing.c\
 		parsing/get_next_line/get_next_line.c\
 		parsing/get_next_line/get_next_line_utils.c
 
@@ -59,8 +65,8 @@ libft :
 		@echo "\033[32m\t\t\t[OK]\033[0m"
 
 $(NAME) : mlx libft ${OBJS}
-		#@echo -n  "Generating ${NAME}"
-		${CC} ${CFLAGS} ${OBJS} ${LIBFT} ${MLX} ${LIB} -o ${NAME} 
+		@echo -n  "Generating ${NAME}"
+		@${CC} ${CFLAGS} ${OBJS} ${LIBFT} ${MLX} ${LIB} -o ${NAME} 
 		@echo "\033[32m\t\t[OK]\033[0m"
 
 bonus : $(NAME)

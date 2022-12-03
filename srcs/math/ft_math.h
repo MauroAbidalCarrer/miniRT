@@ -6,12 +6,13 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/12 23:51:05 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/02 19:00:56 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/03 20:25:47 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_MAT_H
-# define FT_MAT_H
+#ifndef FT_MATH_H
+# define FT_MATH_H
+# define DEG_TO_RAD 0.0174533
 # include <math.h>
 //vectors
 typedef struct s_vector3
@@ -27,20 +28,21 @@ t_vec		mul_d(t_vec v, double d);
 t_vec		sum(t_vec a, t_vec b);
 t_vec		dif(t_vec a, t_vec b);
 t_vec		mul(t_vec a, t_vec b);
-double	dist(t_vec a, t_vec b);
-double	sqrd_dist(t_vec a, t_vec b);
+t_vec		cross(t_vec a, t_vec b);
+double		dist(t_vec a, t_vec b);
+double		sqrd_dist(t_vec a, t_vec b);
 //div funciton already exists in stdlib
 t_vec		di(t_vec num, t_vec denum);
 t_vec		normalized(t_vec v);
 //vector operation
-double	magnitude(t_vec v);
-double sqrd_mag(t_vec v);
-double	dot(t_vec a, t_vec b);
+double		magnitude(t_vec v);
+double		sqrd_mag(t_vec v);
+double		dot(t_vec a, t_vec b);
 //others
-void	print_vec2(t_vec v);
-void	print_vec3(t_vec v);
+void		print_vec2(t_vec v);
+void		print_vec3(t_vec v);
 t_vec		angles_to_vector(t_vec angles);
-t_vec	new_v(double x, double y, double z);
+t_vec		new_v(double x, double y, double z);
 
 //matrices
 typedef struct s_matrix
@@ -52,15 +54,16 @@ typedef struct s_matrix
 
 //t_matrix	angles_to_roatation(t_vec angles);
 t_matrix	dir_to_rotation(t_vec angles);
-t_vec	mult_vec_by_matrix(t_vec v, t_matrix mat);
+t_vec		mult_vec_by_matrix(t_vec v, t_matrix mat);
 
 //algebra
 //quadratic
 # define DEG2RAD 0.0174533
 # define CLOSEST 0
 # define FURTHEST 1
-int		solve_2nd_degree(double a, double b, double c, double *solutions);
-double	sqrd(double a);
+
+int			solve_2nd_degree(double a, double b, double c, double *solutions);
+double		sqrd(double a);
 
 //ray
 typedef struct s_ray

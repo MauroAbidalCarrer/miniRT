@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 14:22:43 by maabidal          #+#    #+#             */
-/*   Updated: 2022/05/17 21:36:12 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/03 21:19:30 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ static void	mult_channels(int color_index, t_col a, t_col b, char *dst)
 	a_channel = (a & 0xFF << color_shift) >> color_shift;
 	b_channel = (b & 0xFF << color_shift) >> color_shift;
 	product = (a_channel * b_channel) / (t_channel)MAX_CHANNEL;
-//printf("a = %d, b = %d, product= %d\n", a_channel, b_channel, product);
 	dst[color_index] = (char)product;
 }
 
