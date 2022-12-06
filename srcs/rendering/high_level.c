@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:35:04 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/03 20:22:50 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/06 18:58:41 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ static t_col	render_pixel(t_scene scene, t_ray cam_ray)
 	return (BLACK);
 }
 
-void	render_img(t_scene scene, t_mlx mlx)
+//TODO: proteger mlx_new_image?
+void	render_img(t_scene scene, t_mlx mlx, t_to_free *to_free)
 {
 	int		x;
 	int		y;
@@ -73,6 +74,8 @@ void	render_img(t_scene scene, t_mlx mlx)
 	t_col	*img;
 
 	img_ptr = mlx_new_image(mlx.ptr, WIN_WIDTH, WIN_HEIGHT);
+	if (img_ptr == NULL)
+		ft_close(to_free);
 	img = (t_col *)mlx_get_data_addr(img_ptr, &x, &x, &x);
 	x = -1;
 	while (++x < WIN_WIDTH)

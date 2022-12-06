@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 20:47:53 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/03 21:01:44 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/06 16:53:22 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	parse_scene(char *filename, t_scene *scene)
 		free(line);
 		line = get_next_line(fd);
 	}
+	close(fd);
 	if ((scene->singletons_mask & SPOT_MASK) == 0
 		|| (scene->singletons_mask & AMBIENT_MASK) == 0
 		|| (scene->singletons_mask & CAMERA_MASK) == 0)

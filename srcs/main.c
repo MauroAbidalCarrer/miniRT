@@ -6,18 +6,12 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:45:01 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/03 21:20:57 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/06 19:01:04 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "header.h"
 #define KEY_ESC_M 53
 #define KEY_ESC_L 65307
-
-typedef struct s_to_free
-{
-	t_mlx	*mlx;
-	t_list	*objs;
-}	t_to_free;
 
 static void	free_obj(void *obj_interface)
 {
@@ -26,7 +20,7 @@ static void	free_obj(void *obj_interface)
 }
 
 //should only be called after setup_scene
-static int	ft_close(t_to_free *to_free)
+int	ft_close(t_to_free *to_free)
 {
 	t_mlx	mlx;
 
@@ -84,7 +78,7 @@ int	main(int ac, char **av)
 	mlx.win = mlx_new_window(mlx.ptr, WIN_WIDTH, WIN_HEIGHT, "miniRT");
 	if (mlx.win == NULL)
 		ft_close(&to_free);
-	render_img(scene, mlx);
+	render_img(scene, mlx, &to_free);
 	mlx_hook(mlx.win, 17, 1L << 2, &ft_close, &to_free);
 	mlx_key_hook(mlx.win, &key_hook, &to_free);
 	mlx_loop(mlx.ptr);

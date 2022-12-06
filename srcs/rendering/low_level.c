@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:32:37 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/03 20:18:30 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/06 18:55:32 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -58,10 +58,11 @@ t_ray	mk_camray(t_camera cam, int x, int y)
 	local_origin.x = ((double)x - (double)HALF_WIDTH) / (double)HALF_WIDTH;
 	local_origin.y = ((double)HALF_HEIGHT - (double)y) / (double)HALF_HEIGHT;
 	local_origin.x *= -1 * cam.fov_scalar;
-	local_origin.y *= cam.fov_scalar * ((double)WIN_HEIGHT / (double)WIN_WIDTH);
+	local_origin.y *= cam.fov_scalar * (double)WIN_HEIGHT / (double)WIN_WIDTH;
 	local_origin.z = NEAR_PLANE;
 	rotated_local_origin = mult_vec_by_matrix(local_origin, cam.rotation);
-	ray.origin = rotated_local_origin;
+	ray.origin = sum(cam.pos, rotated_local_origin);
+	ray.dir = rotated_local_origin;
 	ray.dir = normalized(rotated_local_origin);
 	return (ray);
 }

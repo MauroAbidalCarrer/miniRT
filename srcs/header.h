@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 18:37:06 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/03 21:21:25 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/06 19:02:42 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,17 @@ typedef struct s_mlx
 	void	*ptr;
 	void	*win;
 }	t_mlx;
+# endif
+
+# ifndef T_TO_FREE
+#  define T_TO_FREE
+
+typedef struct s_to_free
+{
+	t_mlx	*mlx;
+	t_list	*objs;
+}	t_to_free;
+int	ft_close(t_to_free *to_free);
 # endif
 
 # ifndef BOOL
