@@ -6,12 +6,15 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:35:04 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/06 18:58:41 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/06 19:41:44 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rendering.h"
 
+//check foreach object if the ray collides with it
+//don't stop to the first collision, another object might collide closer to the
+//origin
 static int	cast_ray(t_ray ray, t_list *objs, t_rayhit *hit)
 {
 	int				current;
@@ -38,6 +41,12 @@ static t_ray	mk_lightray(t_vec point, t_vec to_light)
 	return (light_ray);
 }
 
+//1: cast a ray from the pixel (in world space)
+//2: if the ray doesn't hit an object, set the pixel to black
+//3: if the ray hits an object, send a second one towards the spot light
+//if the second ray hits an obj, it means that it is obescured by the second obj
+//if there is no obstacle in the second's ray path,
+//apply the lighting of the spot
 static t_col	render_pixel(t_scene scene, t_ray cam_ray)
 {
 	t_rayhit	hit;
@@ -64,7 +73,9 @@ static t_col	render_pixel(t_scene scene, t_ray cam_ray)
 	return (BLACK);
 }
 
-//TODO: proteger mlx_new_image?
+//1: create a new image to write into
+//2: render each pixl one by one
+//3: apply the image and destroy
 void	render_img(t_scene scene, t_mlx mlx, t_to_free *to_free)
 {
 	int		x;

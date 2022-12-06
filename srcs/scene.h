@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:55:22 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/06 11:36:50 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/06 19:31:31 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,15 @@ typedef struct s_rayhit
 	double	t;
 }	t_rayhit;
 # endif 
-# define SPOT_MASK 1
-# define AMBIENT_MASK 2
-# define CAMERA_MASK 4
 
+//raycaster is a funciton pointer that takes in this order:
+//an object, a ray and a rayhit
+//returns one if ray has hit the object
+//writes the rayhit if the ray collides with the object
 typedef int (* t_ray_caster)(void *, t_ray, t_rayhit *);
 
+//object_interface is used to knoz if a ray collides with an object
+//ray_caster is called to know if a ray collides with an object
 typedef struct s_obj_interface
 {
 	t_ray_caster	ray_caster;
@@ -78,6 +81,13 @@ typedef struct e_cylinder
 	t_col		albedo;
 }				t_cylinder;
 
+# define SPOT_MASK 1
+# define AMBIENT_MASK 2
+# define CAMERA_MASK 4
+//struct that represents the entire scene
+//singletons_mask is a bit mask that is use to check
+//that there is exactly one camera, ambent_light and ambient_light
+//objs is a list of obj_interfaces
 typedef struct s_scene
 {
 	t_list		*objs;

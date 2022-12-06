@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/11 18:37:06 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/06 19:02:42 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/06 19:21:04 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_mlx
 # ifndef T_TO_FREE
 #  define T_TO_FREE
 
+//struct that holds everyhing that needs to be freed or closed by the mlx
 typedef struct s_to_free
 {
 	t_mlx	*mlx;

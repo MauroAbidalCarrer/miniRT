@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:52:11 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/06 19:06:35 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/06 19:32:44 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 # ifndef RAYHIT
 #  define RAYHIT
 
+//describes a collision between an object and a ray
+//albedo is the color of the object that the ray collided with
 typedef struct s_rayhit
 {
 	t_col	albedo;
