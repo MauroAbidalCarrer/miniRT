@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 20:46:07 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/07 18:48:15 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/07 18:56:45 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	parse_spot_light(char *line, t_scene *scene)
 	status = parse_obj(line, parsers, dsts, "L");
 	if (status == NOT_FOUND)
 		return (NOT_FOUND);
-	if (status == ERROR 
+	if (status == ERROR
 		|| !in_range(scene->light.intensity, 0, 1)
 		|| scene->singletons_mask & SPOT_MASK)
 		return (ERROR);
@@ -59,7 +59,7 @@ int	parse_camera(char *line, t_scene *scene)
 	status = parse_obj(line, parsers, dsts, "C");
 	if (status == NOT_FOUND)
 		return (NOT_FOUND);
-	if (status == 1 
+	if (status == 1
 		|| !in_range(cam_buf.fov, 0, 180)
 		|| scene->singletons_mask & CAMERA_MASK)
 		return (ERROR);

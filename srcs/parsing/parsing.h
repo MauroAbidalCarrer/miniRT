@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 17:01:04 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/07 18:51:46 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/07 18:56:09 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 //otherwise, returns the rest of the line after the field
 //								  	line,   dst
 typedef char *(*	t_field_parser)(char *, void *);
-typedef int (*	t_object_parser)(char *, t_scene *);
+typedef int (*		t_object_parser)(char *, t_scene *);
 
 //parses a field(color, vector3 or float)
 //calls ft_exit if there is a format error
