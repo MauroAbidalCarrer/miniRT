@@ -44,7 +44,7 @@ SRCS =	main.c\
 
 LIBFT = srcs/libft/libft.a
 
-CFLAGS = #-Wall -Werror -Wextra -g3 -MMD
+CFLAGS = -Wall -Werror -Wextra
 
 OBJDIR = objs
 SRCDIR = srcs
@@ -92,4 +92,4 @@ fclean : clean
 
 re : fclean all
 
-l.PHONY: all, clean, fclean, re, libft, test, bonus, mlx, testbonus
+Tl.PHONY: all, clean, fclean, re, libft, test, bonus, mlx, testbonus

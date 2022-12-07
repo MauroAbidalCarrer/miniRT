@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 20:46:07 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/03 20:58:25 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/07 18:48:15 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,14 @@ int	parse_spot_light(char *line, t_scene *scene)
 	dsts[2] = &dump;
 	parsers[3] = NULL;
 	status = parse_obj(line, parsers, dsts, "L");
-	if (status == 2)
-		return (1);
-	if (status == 1 || !in_range(scene->light.intensity, 0, 1))
-		ft_exit(scene->objs, BAD_FORMAT_MSG, line);
-	if (scene->singletons_mask & SPOT_MASK)
-		ft_exit(scene->objs, "ERROR: duplicate spot light!\n", line);
+	if (status == NOT_FOUND)
+		return (NOT_FOUND);
+	if (status == ERROR 
+		|| !in_range(scene->light.intensity, 0, 1)
+		|| scene->singletons_mask & SPOT_MASK)
+		return (ERROR);
 	scene->singletons_mask |= SPOT_MASK;
-	return (0);
+	return (NO_ERROR);
 }
 
 //check that fov is in 0,180 range,
@@ -57,16 +57,18 @@ int	parse_camera(char *line, t_scene *scene)
 	dsts[2] = &cam_buf.fov;
 	parsers[3] = NULL;
 	status = parse_obj(line, parsers, dsts, "C");
-	if (status == 2)
-		return (1);
-	if (status == 1 || !in_range(cam_buf.fov, 0, 180))
-		ft_exit(scene->objs, BAD_FORMAT_MSG, line);
-	if (scene->singletons_mask & CAMERA_MASK)
-		ft_exit(scene->objs, "ERROR: duplicate camera!\n", line);
+	if (status == NOT_FOUND)
+		return (NOT_FOUND);
+	if (status == 1 
+		|| !in_range(cam_buf.fov, 0, 180)
+		|| scene->singletons_mask & CAMERA_MASK)
+		return (ERROR);
 	cam_buf.dir = normalized(cam_buf.dir);
+	if (cam_buf.fov >= 180)
+		cam_buf.fov = 179;
 	scene->camera = cam_buf;
 	scene->singletons_mask |= CAMERA_MASK;
-	return (0);
+	return (NO_ERROR);
 }
 
 //check for ambient mask
@@ -85,13 +87,13 @@ int	parse_ambient_light(char *line, t_scene *scene)
 	parsers[1] = &parse_color;
 	parsers[2] = NULL;
 	status = parse_obj(line, parsers, dsts, "A");
-	if (status == 2)
-		return (1);
-	if (status == 1 || !in_range(intensity, 0, 1))
-		ft_exit(scene->objs, BAD_FORMAT_MSG, line);
-	if (scene->singletons_mask & AMBIENT_MASK)
-		ft_exit(scene->objs, "ERROR: duplicate ambiant light!\n", line);
+	if (status == NOT_FOUND)
+		return (NOT_FOUND);
+	if (status == 1
+		|| !in_range(intensity, 0, 1)
+		|| scene->singletons_mask & AMBIENT_MASK)
+		return (ERROR);
 	scene->ambiant_light = mult_color_scalar(col, intensity);
 	scene->singletons_mask |= AMBIENT_MASK;
-	return (0);
+	return (NO_ERROR);
 }

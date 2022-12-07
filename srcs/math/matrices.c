@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 00:24:35 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/03 16:50:49 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/07 18:34:01 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,6 @@ t_matrix	angles_to_rotation(t_vec angles)
 t_matrix	dir_to_rotation(t_vec dir)
 {
 	t_matrix	m;
-	t_vec		dir_viewd_from_right;
-	t_vec		up_viewed_from_side;
-	double		horizontal_dist;
 
 	m.i = new_v(-dir.z, 0, dir.x);
 	m.j = cross(m.i, dir);

@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 20:45:30 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/03 21:16:28 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/07 16:33:30 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ int	parse_obj(char *line, t_field_parser *parsers, void **dsts, char *oc)
 	return (*line != '\n' && *line != 0);
 }
 
+//function called by ft_lst_clear
 static void	free_obj(void *obj_interface)
 {
 	free(((t_obj_interface *)obj_interface)->obj);

@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:55:22 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/06 19:31:31 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/07 16:39:58 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,6 @@ typedef struct e_cylinder
 	t_col		albedo;
 }				t_cylinder;
 
-# define SPOT_MASK 1
-# define AMBIENT_MASK 2
-# define CAMERA_MASK 4
 //struct that represents the entire scene
 //singletons_mask is a bit mask that is use to check
 //that there is exactly one camera, ambent_light and ambient_light

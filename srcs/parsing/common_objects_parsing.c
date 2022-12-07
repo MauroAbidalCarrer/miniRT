@@ -6,13 +6,13 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 20:47:31 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/03 20:58:09 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/07 17:28:31 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-void	add_new_obj(char *line, t_scene *scene, void *cpy, t_ray_caster caster)
+static int	add_obj(t_scene *scene, void *cpy, t_ray_caster caster)
 {
 	t_obj_interface	*interface;
 	t_list			*new_node;
@@ -24,17 +24,19 @@ void	add_new_obj(char *line, t_scene *scene, void *cpy, t_ray_caster caster)
 		free(new_node);
 		free(interface);
 		free(cpy);
-		ft_exit(scene->objs, ALLOCATION_ERROR_MSG, line);
+		return (ERROR);
 	}
 	interface->obj = cpy;
 	interface->ray_caster = caster;
 	new_node->content = interface;
 	new_node->next = NULL;
 	ft_lstadd_front(&scene->objs, new_node);
+	return (FOUND_AND_NO_ERROR);
 }
 
 //check dir in range [-1, 1]
 //divides radius by two to get actual radius(and not diameter)
+//add_obj in retur to gain one line
 int	parse_cylinder(char *line, t_scene *scene)
 {
 	t_cylinder		cyl_buff;
@@ -55,13 +57,13 @@ int	parse_cylinder(char *line, t_scene *scene)
 	dsts[4] = &cyl_buff.albedo;
 	parsers[5] = NULL;
 	status = parse_obj(line, parsers, dsts, "cy");
-	if (status == 2)
-		return (1);
-	if (status == 1 || !vector_in_range(cyl_buff.dir, -1, 1))
-		ft_exit(scene->objs, BAD_FORMAT_MSG, line);
+	if (status == NOT_FOUND)
+		return (NOT_FOUND);
+	if (status == ERROR || !vector_in_range(cyl_buff.dir, -1, 1))
+		return (ERROR);
 	cyl_buff.dir = normalized(cyl_buff.dir);
 	cpy = ft_memcpy(malloc(sizeof(t_cylinder)), &cyl_buff, sizeof(t_cylinder));
-	return (add_new_obj(line, scene, cpy, cylinder_raycast), 0);
+	return (add_obj(scene, cpy, cylinder_raycast));
 }
 
 int	parse_sphere(char *line, t_scene *scene)
@@ -80,13 +82,13 @@ int	parse_sphere(char *line, t_scene *scene)
 	dsts[2] = &sphere_buff.albedo;
 	parsers[3] = NULL;
 	status = parse_obj(line, parsers, dsts, "sp");
-	if (status == 2)
-		return (1);
-	if (status == 1)
-		ft_exit(scene->objs, BAD_FORMAT_MSG, line);
+	if (status == NOT_FOUND)
+		return (NOT_FOUND);
+	if (status == ERROR)
+		return (ERROR);
 	sphere_buff.radius /= 2.0;
 	cpy = ft_memcpy(malloc(sizeof(t_sphere)), &sphere_buff, sizeof(t_sphere));
-	return (add_new_obj(line, scene, cpy, sphere_raycast), 0);
+	return (add_obj(scene, cpy, sphere_raycast));
 }
 
 int	parse_plane(char *line, t_scene *scene)
@@ -105,11 +107,11 @@ int	parse_plane(char *line, t_scene *scene)
 	dsts[2] = &plane_buff.albedo;
 	parsers[3] = NULL;
 	status = parse_obj(line, parsers, dsts, "pl");
-	if (status == 2)
-		return (1);
-	if (status == 1 || !vector_in_range(plane_buff.normal, -1, 1))
-		ft_exit(scene->objs, BAD_FORMAT_MSG, line);
+	if (status == NOT_FOUND)
+		return (NOT_FOUND);
+	if (status == ERROR || !vector_in_range(plane_buff.normal, -1, 1))
+		return (ERROR);
 	plane_buff.normal = normalized(plane_buff.normal);
 	cpy = ft_memcpy(malloc(sizeof(t_plane)), &plane_buff, sizeof(t_plane));
-	return (add_new_obj(line, scene, cpy, plane_raycast), 0);
+	return (add_obj(scene, cpy, plane_raycast));
 }
