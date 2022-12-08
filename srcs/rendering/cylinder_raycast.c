@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 20:18:44 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/03 20:19:07 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/08 11:51:20 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -22,7 +22,7 @@ static int	disk_raycast(t_cylinder cylinder, t_ray ray, t_rayhit *hit)
 		plane.normal = mul_d(plane.normal, -1);
 	plane.pos = sum(cylinder.pos, mul_d(plane.normal, cylinder.height));
 	plane.albedo = cylinder.albedo;
-	plane_hit.t = DBL_MAX;
+	plane_hit.t = hit->t;
 	if (plane_raycast(&plane, ray, &plane_hit)
 		&& sqrd_dist(plane_hit.point, plane.pos) <= sqrd(cylinder.diameter / 2))
 	{
@@ -69,7 +69,7 @@ int	cylinder_raycast(void *cylinder_ptr, t_ray ray, t_rayhit *hit)
 	cyl = *(t_cylinder *)cylinder_ptr;
 	if (disk_raycast(cyl, ray, hit))
 		return (TRUE);
-	tube_hit.t = DBL_MAX;
+	tube_hit.t = hit->t;
 	if (tube_raycast(cyl, ray, &tube_hit, inters))
 	{
 		*hit = tube_hit;

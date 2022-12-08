@@ -6,7 +6,7 @@
 /*   By: maabidal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 00:32:37 by maabidal          #+#    #+#             */
-/*   Updated: 2022/12/06 18:55:32 by maabidal         ###   ########.fr       */
+/*   Updated: 2022/12/08 11:39:20 by maabidal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -14,7 +14,7 @@
 
 int	are_hits(double *inters, t_rayhit *hit)
 {
-	if (*inters > 0 && *inters < hit->t)
+	if (*inters > 0 && *inters < hit->t && *inters < inters[1])
 	{
 		hit->t = *inters;
 		return (TRUE);
